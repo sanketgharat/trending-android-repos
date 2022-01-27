@@ -43,7 +43,6 @@ class RepoDetailActivity : BaseActivity() {
             binding.textViewDescription.text = it.description
 
             Glide.with(this).load(it.owner.avatarUrl)
-                .circleCrop()
                 .error(R.mipmap.ic_launcher_round)
                 .placeholder(R.mipmap.ic_launcher_round)
                 .into(binding.imageOwner)

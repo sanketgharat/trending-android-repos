@@ -10,12 +10,6 @@ import dagger.android.ContributesAndroidInjector
 @Module
 abstract class ListingActivityModule {
 
-    /*@ContributesAndroidInjector
-    abstract fun contributeBaseActivity(): BaseActivity*/
-
-    /*@ContributesAndroidInjector
-    abstract fun contributeRepoListActivityM(): RepoListActivity_MembersInjector*/
-
     @ContributesAndroidInjector
     abstract fun contributeRepoListActivity(): RepoListActivity
 }

@@ -16,7 +16,6 @@ import dagger.android.AndroidInjectionModule
     modules =
     [
         AndroidInjectionModule::class,
-        ListActivityModule::class,
         DatabaseModule::class,
         ApiClientModule::class,
         ListingViewModelModule::class,
@@ -33,5 +32,5 @@ interface AppComponent {
     }
 
     fun inject(application: MyApp)
-    fun inject(repository: RepoSyncWorker)
+    fun injectWorker(repository: RepoSyncWorker)
 }

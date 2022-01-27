@@ -10,6 +10,7 @@ import androidx.room.Room
 import android.app.Application
 import com.sg.trendingandroidrepos.data.local.ReposDatabase
 import com.sg.trendingandroidrepos.data.local.dao.GithubReposDao
+import com.sg.trendingandroidrepos.utils.Constants
 import dagger.Provides
 
 
@@ -23,7 +24,7 @@ class DatabaseModule {
             .databaseBuilder(
                 application,
                 ReposDatabase::class.java,
-                "repos_db"
+                Constants.DB_NAME
             )
             .fallbackToDestructiveMigration()
             .build()

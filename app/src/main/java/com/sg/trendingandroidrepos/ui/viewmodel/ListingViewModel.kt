@@ -9,9 +9,11 @@ import com.sg.trendingandroidrepos.data.TrendingRepository
 import com.sg.trendingandroidrepos.data.local.dao.GithubReposDao
 import com.sg.trendingandroidrepos.data.local.entity.GithubRepoEntity
 import com.sg.trendingandroidrepos.data.remote.ApiServiceInterface
-import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class ListingViewModel @Inject constructor(
@@ -19,7 +21,7 @@ class ListingViewModel @Inject constructor(
     private val apiServiceInterface: ApiServiceInterface
 ) : ViewModel() {
 
-    companion object{
+    companion object {
         private const val TAG = "ListingViewModel"
     }
 
@@ -27,19 +29,21 @@ class ListingViewModel @Inject constructor(
 
     var job: Job? = null
     private val _repoList = MutableLiveData<List<GithubRepoEntity>>()
-    val repoList: LiveData<List<GithubRepoEntity>>  get() = _repoList
+    val repoList: LiveData<List<GithubRepoEntity>> get() = _repoList
 
     private val _errorMessage = MutableLiveData<String>()
-    val errorMessage: LiveData<String>  get() = _errorMessage
+    val errorMessage: LiveData<String> get() = _errorMessage
 
     private val _loadingRepos = MutableLiveData<Boolean>()
-    val loadingRepos: LiveData<Boolean>  get() = _loadingRepos
+    val loadingRepos: LiveData<Boolean> get() = _loadingRepos
 
-    fun getRepositories(sort: String?,
-                        order: String?,
-                        page: Int?,
-                        query: String?,
-                        perPage: Int?) {
+    fun getRepositories(
+        sort: String?,
+        order: String?,
+        page: Int?,
+        query: String?,
+        perPage: Int?
+    ) {
 
         Log.d(TAG, "getRepositories: call")
 
@@ -48,20 +52,13 @@ class ListingViewModel @Inject constructor(
         job = viewModelScope.launch(IO) {
             repository.let { trendingRepository ->
                 val response = trendingRepository.getGithubRepos(sort, order, page, query, perPage)
-                /*withContext(Dispatchers.Main) {
-                    if (response.isSuccessful && response.body() != null) {
-                        _repoList.postValue(response.body()!!.repositoryList)
-                        //loading.value = false
-                    } else {
-                        //onError("Error : ${response.message()} ")
-                    }
-                }*/
+
                 withContext(Main) {
                     _loadingRepos.value = false
                     if (response.isSuccessful && response.body() != null) {
                         Log.d(TAG, "getRepositories: isSuccessful true")
                         _repoList.postValue(response.body()!!.repositoryList)
-                        withContext(Dispatchers.IO) {
+                        withContext(IO) {
                             repository.insertGithubRepoList(response.body()!!.repositoryList)
                         }
                     } else {

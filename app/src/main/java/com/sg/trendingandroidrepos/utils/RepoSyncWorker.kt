@@ -1,17 +1,13 @@
 package com.sg.trendingandroidrepos.utils
 
-import android.app.Application
 import android.content.Context
 import android.util.Log
 import androidx.work.*
 import com.sg.trendingandroidrepos.MyApp
 import com.sg.trendingandroidrepos.data.TrendingRepository
-import com.sg.trendingandroidrepos.data.local.dao.GithubReposDao
-import com.sg.trendingandroidrepos.data.remote.ApiServiceInterface
-import com.sg.trendingandroidrepos.di.component.DaggerAppComponent
-import com.sg.trendingandroidrepos.ui.viewmodel.ListingViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class RepoSyncWorker(context: Context, workerParams: WorkerParameters) : CoroutineWorker(
@@ -44,15 +40,13 @@ class RepoSyncWorker(context: Context, workerParams: WorkerParameters) : Corouti
             return false
         }
 
-
     }
 
     @Inject
     lateinit var trendingRepository: TrendingRepository
 
     init {
-        DaggerAppComponent.builder().application(applicationContext as Application)
-            .build().inject(this)
+        (applicationContext as MyApp).component.injectWorker(this)
     }
 
     override suspend fun doWork(): Result {
@@ -63,9 +57,12 @@ class RepoSyncWorker(context: Context, workerParams: WorkerParameters) : Corouti
 
             val response = trendingRepository.getGithubRepos("stars", "desc", 1, "android", 20)
             if (response.isSuccessful && response.body() != null) {
-                Log.d(TAG, "getRepositories: isSuccessful true ${response.body()!!.repositoryList.size}")
+                Log.d(
+                    TAG,
+                    "getRepositories: isSuccessful true ${response.body()!!.repositoryList.size}"
+                )
 
-                GlobalScope.launch {
+                CoroutineScope(IO).launch {
                     trendingRepository.insertGithubRepoList(response.body()!!.repositoryList)
                 }
 

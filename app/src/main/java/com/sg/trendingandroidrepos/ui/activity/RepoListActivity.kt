@@ -124,19 +124,18 @@ class RepoListActivity : BaseActivity(), RepoListAdapter.OnRepoSelectionListener
 
     private fun initWorkManagerTask() {
         runBlocking {
+
+            //Check whether Work is already scheduled or not
+            //Schedule only if not scheduled
             if (RepoSyncWorker.isScheduled(applicationContext)) {
                 Log.d(TAG, "initWorkManagerTask: isScheduled : true")
             } else {
                 Log.d(TAG, "initWorkManagerTask: isScheduled : false")
+
+                //work will be executed only when network is connected
                 val constraints: Constraints = Constraints.Builder()
                     .setRequiredNetworkType(NetworkType.CONNECTED)
                     .build()
-
-                /*val repoSyncWorkRequest: WorkRequest =
-                    OneTimeWorkRequestBuilder<RepoSyncWorker>()
-                        .setConstraints(constraints)
-                        .addTag(Constants.WORK_SYNC_REPO_TAG)
-                        .build()*/
 
                 //Repeat work every 15 minutes
                 val repoSyncWorkRequest =
@@ -158,7 +157,7 @@ class RepoListActivity : BaseActivity(), RepoListAdapter.OnRepoSelectionListener
 
     }
 
-    private fun deleteAllRepos(){
+    private fun deleteAllRepos() {
         viewModel.deleteAllGithubRepos()
     }
 
@@ -176,7 +175,7 @@ class RepoListActivity : BaseActivity(), RepoListAdapter.OnRepoSelectionListener
 
             R.id.action_delete -> {
                 Log.d(TAG, "onOptionsItemSelected: action_delete")
-                    deleteAllRepos()
+                deleteAllRepos()
                 true
             }
             else -> super.onOptionsItemSelected(item)
