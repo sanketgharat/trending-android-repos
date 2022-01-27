@@ -9,4 +9,8 @@ object Constants {
     const val PAGE_MAX_SIZE = "20"
     const val DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss"
     const val INTENT_POST = "intent_post"
+
+    const val EXTRA_REPO = "repo"
+    const val WORK_SYNC_REPO_TAG = "repo_syc_tag"
+    const val WORK_SYNC_REPO_NAME = "repo_syc_name"
 }

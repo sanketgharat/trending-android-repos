@@ -1,12 +1,16 @@
 package com.sg.trendingandroidrepos.data.local.entity
 
+import android.os.Parcelable
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 @Entity(tableName = "repos_table")
-public data class GithubRepoEntity(
+data class GithubRepoEntity(
     @PrimaryKey
     @SerializedName("id")
     @Expose
@@ -32,12 +36,14 @@ public data class GithubRepoEntity(
     @Expose
     var description: String,
 
-    /*@SerializedName("owner")
+    @SerializedName("owner")
     @Expose
-    val owner: RepoOwner*/
+    @Embedded
+    var owner: RepoOwner
 
-){
-    constructor() : this(0, "", "", "", false, ""){
+) : Parcelable {
+    constructor() : this(0, "", "", "", false, "", RepoOwner()) {
 
     }
+
 }

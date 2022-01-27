@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.sg.trendingandroidrepos.R
 import com.sg.trendingandroidrepos.data.local.entity.GithubRepoEntity
 import com.sg.trendingandroidrepos.databinding.RepoRecyclerItemLayoutBinding
 
@@ -56,6 +58,16 @@ class RepoListAdapter : RecyclerView.Adapter<RepoListAdapter.MyViewHolder>() {
 
         with(holder) {
             binding.textViewName.text = item.fullName
+
+            Glide.with(binding.imageOwner.context).load(item.owner.avatarUrl)
+                .circleCrop()
+                .error(R.mipmap.ic_launcher_round)
+                .placeholder(R.mipmap.ic_launcher_round)
+                .into(binding.imageOwner)
+
+            binding.layoutConstraint.setOnClickListener {
+                listener?.onRepoSelected(item)
+            }
         }
 
     }

@@ -4,7 +4,9 @@ import com.sg.trendingandroidrepos.MyApp
 import dagger.Component
 import javax.inject.Singleton
 import android.app.Application
+import com.sg.trendingandroidrepos.data.TrendingRepository
 import com.sg.trendingandroidrepos.di.module.*
+import com.sg.trendingandroidrepos.utils.RepoSyncWorker
 
 import dagger.BindsInstance
 import dagger.android.AndroidInjectionModule
@@ -14,9 +16,9 @@ import dagger.android.AndroidInjectionModule
     modules =
     [
         AndroidInjectionModule::class,
-        ApiClientModule::class,
         ListActivityModule::class,
         DatabaseModule::class,
+        ApiClientModule::class,
         ListingViewModelModule::class,
         ListingActivityModule::class
     ]
@@ -31,4 +33,5 @@ interface AppComponent {
     }
 
     fun inject(application: MyApp)
+    fun inject(repository: RepoSyncWorker)
 }

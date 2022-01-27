@@ -4,6 +4,8 @@ import dagger.Module
 import com.google.gson.GsonBuilder
 
 import com.google.gson.Gson
+import com.sg.trendingandroidrepos.data.TrendingRepository
+import com.sg.trendingandroidrepos.data.local.dao.GithubReposDao
 import com.sg.trendingandroidrepos.data.remote.ApiServiceInterface
 import com.sg.trendingandroidrepos.utils.Constants
 import dagger.Provides
@@ -52,4 +54,9 @@ class ApiClientModule {
     @Provides
     fun provideApiService(retrofit: Retrofit): ApiServiceInterface =
         retrofit.create(ApiServiceInterface::class.java)
+
+    @Singleton
+    @Provides
+    fun provideTrendingRepository(dao: GithubReposDao, apiServiceInterface: ApiServiceInterface): TrendingRepository =
+        TrendingRepository(dao, apiServiceInterface)
 }
